@@ -12,9 +12,16 @@
 // with the animal as the context, and 'Trogdor' as a parameter.
 // return the result of your updateAnimal invocation
 
-// CODE HERE...
-
-
+callBinding = function(magicAnimals, updateAnimal, id) {
+  var index = 1;
+  magicAnimals.map((val, i) => {
+    if (val.id === id) {
+      updateAnimal.call(magicAnimals[i], "Trogdor");
+      index = i;
+    }
+  });
+  return magicAnimals[index];
+};
 
 // *************
 // * PROBLEM 2 *
@@ -27,9 +34,18 @@
 // with the context of the animal, and the array ['being majestic', 'eating rainbows'] as a parameter.
 // return the result of your updateAnimal invocation
 
-// CODE HERE...
-
-
+function applyBinding(magicAnimals, updateAnimal, id) {
+  var index = 1;
+  magicAnimals.map((val, i) => {
+    if (val.id === id) {
+      index = i;
+    }
+  });
+  return updateAnimal.apply(magicAnimals[index], [
+    "being majestic",
+    "eating rainbows"
+  ]);
+}
 
 // *************
 // * PROBLEM 3 *
@@ -47,9 +63,16 @@
 
 var foo;
 
-// CODE HERE...
-
-
+const promiseMe = $q => {
+  let obj = $q.defer();
+  setTimeout(() => {
+    obj.resolve(() => {
+      foo = "bar";
+      return foo;
+    });
+  }, 20);
+  return obj.promise.then(res => res());
+};
 
 // *************
 // * PROBLEM 4 *
@@ -63,4 +86,19 @@ var foo;
 // Make an array of emails (array of strings) from the returned data (You will need to console log or debug to figure this out),
 // and then resolve the array as you complete your promise.
 
-// CODE HERE...
+const emailList = ($q, $http) => {
+  var obj = $q.defer();
+  let arr = [];
+
+  $http.get("/api/users").then(res => {
+    let data = res.data;
+    for (var i in data) {
+      arr.push(data[i].email);
+    }
+  });
+
+  obj.resolve(() => arr);
+  return obj.promise.then(function(res) {
+    return res();
+  });
+};
